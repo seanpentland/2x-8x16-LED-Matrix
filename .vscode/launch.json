@@ -12,7 +12,7 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
-            "executable": "/Users/sean/Documents/PlatformIO/Projects/2x 8x16 test 2/.pio/build/nanoatmega328new/firmware.elf",
+            "executable": "/Users/sean/Stuff/School/2020/Semester 2/Project/arduino programming/2x-8x16-LED-Matrix/.pio/build/nanoatmega328new/firmware.elf",
             "toolchainBinDir": "/Users/sean/.platformio/packages/toolchain-atmelavr/bin",
             "preLaunchTask": {
                 "type": "PlatformIO",
@@ -24,7 +24,7 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (skip Pre-Debug)",
-            "executable": "/Users/sean/Documents/PlatformIO/Projects/2x 8x16 test 2/.pio/build/nanoatmega328new/firmware.elf",
+            "executable": "/Users/sean/Stuff/School/2020/Semester 2/Project/arduino programming/2x-8x16-LED-Matrix/.pio/build/nanoatmega328new/firmware.elf",
             "toolchainBinDir": "/Users/sean/.platformio/packages/toolchain-atmelavr/bin",
             "internalConsoleOptions": "openOnSessionStart"
         }

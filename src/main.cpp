@@ -32,8 +32,6 @@ unsigned char table[2][16] = {
 unsigned int xRev[] = {15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0};
 unsigned int yRev[] = {7,6,5,4,3,2,1,0};
 
-//unsigned char tab[][] = {0x00},{0x00}; //0x80,0x01
-//unsigned short gri[]   = {0x8080};
 unsigned char dis[] = {displayNum1, displayNum2};
 unsigned char disClk[] = {displayClk1, displayClk2};
 unsigned char fixedAddr  = 0x44; //fixed address
