@@ -19,12 +19,12 @@ void AddToTableSingle(int x, int y);
 void RemoveTableSingle(int x, int y);
 void ClearTable();
 
-unsigned char row1[] = {0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 
-                        0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF};
-unsigned char row2[] = {0xCF, 0xCE, 0xCD, 0xCC, 0xCB, 0xCA, 0xC9, 0xC8, 
-                        0xC7, 0xC6, 0xC5, 0xC4, 0xC3, 0xC2, 0xC1, 0xC0};
-unsigned char col2[] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
-unsigned char col1[] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
+unsigned char row[2][16] = {
+  {0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7,0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF},
+  {0xCF, 0xCE, 0xCD, 0xCC, 0xCB, 0xCA, 0xC9, 0xC8,0xC7, 0xC6, 0xC5, 0xC4, 0xC3, 0xC2, 0xC1, 0xC0}};
+unsigned char col[2][8] = {
+  {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80},
+  {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01}};
 unsigned char table[2][16] = {
   {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
   {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}
@@ -40,22 +40,18 @@ unsigned char brightness = 0x88; //lowest brightness setting
 
 void setup() {
   Serial.begin(115200);
-  pinMode(dis[0], OUTPUT);
-  pinMode(dis[1], OUTPUT);
-  pinMode(disClk[0], OUTPUT);
-  pinMode(disClk[1], OUTPUT);
-  digitalWrite(dis[0], LOW);
-  digitalWrite(dis[1], LOW);
-  digitalWrite(disClk[0], LOW);
-  digitalWrite(disClk[1], LOW);
-  DisplaySendCmd(0, fixedAddr);
-  DisplaySendCmd(1, fixedAddr);
-  DisplaySendCmd(0, brightness); //lowest brightness
-  DisplaySendCmd(1, brightness);
+  for(int i; i<2;i++){
+    pinMode(dis[i], OUTPUT);
+    pinMode(disClk[i], OUTPUT);
+    digitalWrite(dis[i], LOW);
+    digitalWrite(disClk[i], LOW);
+    DisplaySendCmd(i, fixedAddr);
+    DisplaySendCmd(i, brightness); //lowest brightness
+  }
+  
 }
 
 void loop() {
-
   for(int i=0;i<16;i++){
     for(int j=0;j<16;j++){
       AddToTableSingle(i,j);
@@ -73,8 +69,6 @@ void loop() {
   }
   DisplayTable();
   //ClearTable();
-
-
 
 } //end main loop
 
@@ -110,12 +104,12 @@ void AddToTableSingle(int x, int y){
 void DisplaySingle(int x, int y){
   DisplayClearBoth();
   if(y<=7){
-    DisplaySendAddr(1,row2[x]);
-    DisplaySend(1,col2[y]);
+    DisplaySendAddr(1,row[1][x]);
+    DisplaySend(1,col[1][y]);
     DisplayEnd(1);
   }else if(y>=8){
-    DisplaySendAddr(0,row1[x]);
-    DisplaySend(0,col1[y-8]);
+    DisplaySendAddr(0,row[0][x]);
+    DisplaySend(0,col[0][y-8]);
     DisplayEnd(0);
   }
 }
@@ -166,7 +160,7 @@ void DisplayEnd(int display){
 /* --- Clear the display --- */
 void DisplayClear(int display){
   DisplaySendCmd(display,autoAddr);  
-  DisplaySendAddr(display, row1[0]);
+  DisplaySendAddr(display, row[0][0]);
   for(int i = 0; i < 16; i++){
     DisplaySend(display, 0x00);
   }
@@ -182,19 +176,13 @@ void DisplayClearBoth(){
 
 /* --- Send contents of table[][] to both displays --- */
 void DisplayTable(){
-  
-  DisplaySendCmd(0,autoAddr);  
-  DisplaySendAddr(0, row1[0]);
-  for(int i = 0; i < 16; i++){
-    DisplaySend(0, table[0][i]);
+  for(int r;r<2;r++){
+    DisplaySendCmd(r,autoAddr);  
+    DisplaySendAddr(r, row[0][0]);
+    for(int i = 0; i < 16; i++){
+      DisplaySend(r, table[r][i]);
+    }
+    DisplayEnd(r);
+    DisplaySendCmd(r,fixedAddr);
   }
-  DisplayEnd(0);
-  DisplaySendCmd(0,autoAddr);
-  DisplaySendCmd(1,autoAddr);  
-  DisplaySendAddr(1, row1[0]);
-  for(int i = 0; i < 16; i++){
-    DisplaySend(1, table[1][i]);
-  }
-  DisplayEnd(1);
-  DisplaySendCmd(1,fixedAddr);
 }
